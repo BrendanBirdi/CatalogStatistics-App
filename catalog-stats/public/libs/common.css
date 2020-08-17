@@ -1,0 +1,326 @@
+@font-face {
+  font-family: "GT Walsheim Regular";
+  src: url("./fonts/gtwalsheim-regular.woff2") format("woff2"),
+       url("./fonts/gtwalsheim-regular.woff") format("woff"),
+       url("./fonts/gtwalsheim-regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "GT Walsheim Light";
+  src: url("./fonts/gtwalsheim-light.woff2") format("woff2"),
+       url("./fonts/gtwalsheim-light.woff") format("woff"),
+       url("./fonts/gtwalsheim-light.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "GT Walsheim Light Oblique";
+  src: url("./fonts/gtwalsheim-lightoblique.woff") format("woff2"),
+       url("./fonts/gtwalsheim-lightoblique.woff") format("woff"),
+       url("./fonts/gtwalsheim-lightoblique.ttf") format("truetype");
+  font-weight: 100;
+  font-style: italic;
+}
+@font-face {
+  font-family: "GT Walsheim Medium";
+  src: url("./fonts/gtwalsheim-medium.woff2") format("woff2"),
+       url("./fonts/gtwalsheim-medium.woff") format("woff"),
+       url("./fonts/gtwalsheim-medium.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "GT Walsheim Bold";
+  src: url("./fonts/gtwalsheim-bold.woff2") format("woff2"),
+       url("./fonts/gtwalsheim-bold.woff") format("woff"),
+       url("./fonts/gtwalsheim-bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+html,body {
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  min-height: 100%;
+  background-color: #fff;
+  color: #00213c;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+p {
+  display: block;
+  font-size: 15px;
+  line-height: 25px;
+  color: #496478;
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  text-align: -webkit-match-parent;
+}
+
+section {
+  padding-top: 60px;
+  padding-bottom: 60px;
+  min-height: 100vh;
+}
+
+section.mapSection{
+  padding-top: 0px;
+  padding-bottom: 0px;
+  min-height: 100vh;
+}
+
+@media(min-width: 850px) {
+  section {
+    padding-top: 100px;
+  }
+
+  section.mapSection{
+    padding-top: 56px;
+  }
+}
+
+.brd-page-section-title, .brd-heading-xl,  .brd-heading-l, .brd-heading-m, .brd-heading-sm{
+  font-weight: 500 !important;
+}
+
+.floatRight {
+  float: right !important;
+}
+
+.fontSize15px {
+  font-size: 15px !important;
+}
+
+.textAlignLeft{
+  text-align: left !important
+}
+
+.textAlignRight{
+  text-align: right !important
+}
+
+.lowerCase {
+  text-transform: lowercase !important;
+}
+
+.capitalize {
+  text-transform: lowercase !important;
+  text-transform: capitalize !important;
+}
+
+.noMargin {
+  margin: 0px !important;
+}
+
+.margin2px {
+  margin: 2px !important;
+}
+
+.marginBottom10px {
+  margin-bottom: 10px !important;
+}
+
+.paddingBottom10px {
+  padding-bottom: 10px !important;
+}
+
+.paddingLeft17px {
+  padding-left: 17px !important;
+}
+
+.width100per {
+  width: 100% !important;
+}
+
+.letterSpace1px {
+  letter-spacing: 1px !important;
+}
+
+.letterSpace2px {
+  letter-spacing: 2px !important;
+}
+
+.fontWeightNormal {
+  font-weight: normal !important;
+}
+
+.fontWeightBold {
+  font-weight: bold !important;
+}
+
+.fontItalic {
+  font-style: italic !important;
+}
+
+.colCenter{
+  float: none;
+  margin: 0 auto;
+}
+
+.outer {
+  display: table;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.middle {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.inner {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1000px;
+  text-align: left;
+}
+
+.placeholder{
+  -webkit-box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.1);
+  -moz-box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.1);
+  box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.1);
+  background-color: #ffffff;
+  padding: 10px;
+  margin: 5px 0px;
+  border-radius: 5px;
+}
+.placeholderHeading{
+  margin-bottom: 12px;
+  padding-bottom: 5px;
+  font-weight: 500;
+  font-size: 30px;
+  color: #00213c;
+  border-bottom: 1px solid rgba(151, 151, 151, 0.25);
+}
+
+.inputField {
+  border-color: #21a6ff !important;
+  -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15) !important;
+  font-size: 15px !important;
+  line-height: 24px !important;
+  padding: 8px 14px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  margin-bottom: 10px;
+  min-height: auto !important;
+  display: block !important;
+  width: 100% !important;
+  -webkit-transition: border-color 0.3s ease-out, -webkit-box-shadow 0.3s ease-out !important;
+  transition: border-color 0.3s ease-out, -webkit-box-shadow 0.3s ease-out !important;
+  transition: border-color 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  transition: border-color 0.3s ease-out, box-shadow 0.3s ease-out, -webkit-box-shadow 0.3s ease-out !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background-color: transparent !important;
+  -webkit-box-shadow: 0 !important;
+  box-shadow: 0 !important;
+  color: #00213c !important;
+  font-weight: 400 !important;
+  -webkit-appearance: none !important;
+}
+
+.inputField.errorField{
+  border-color: #eb526a !important;
+}
+
+.inputLabel {
+  margin-bottom: 5px !important;
+  cursor: pointer !important;
+  font-family: "GT Walsheim Medium" !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 25px !important;
+}
+
+.Select-control {
+  background-color: transparent !important;
+  border-color: none !important;
+  border-radius: none !important;
+  border: none !important;
+}
+
+.select {
+  border-color: #21a6ff !important;
+  -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15) !important;
+  font-size: 15px !important;
+  line-height: 24px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  margin-bottom: 10px;
+  min-height: auto !important;
+  -webkit-transition: border-color 0.3s ease-out, -webkit-box-shadow 0.3s ease-out !important;
+  transition: border-color 0.3s ease-out, -webkit-box-shadow 0.3s ease-out !important;
+  transition: border-color 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  transition: border-color 0.3s ease-out, box-shadow 0.3s ease-out, -webkit-box-shadow 0.3s ease-out !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background-color: transparent !important;
+  -webkit-box-shadow: 0 !important;
+  box-shadow: 0 !important;
+  color: #00213c !important;
+  font-weight: 400 !important;
+  -webkit-appearance: none !important;
+}
+
+.select.errorSelect{
+  border-color: #eb526a !important;
+}
+
+.brd-textarea {
+  display: block !important;
+  line-height: 24px !important;
+  font-size: 15px !important;
+  width: 100% !important;
+  height: 230px !important;
+  border-color: #21a6ff !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 0 !important;
+  resize: none !important;
+  -webkit-transition: border-color 0.3s ease-out, -webkit-box-shadow 0.3s ease-out !important;
+  transition: border-color 0.3s ease-out, -webkit-box-shadow 0.3s ease-out !important;
+  transition: border-color 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  transition: border-color 0.3s ease-out, box-shadow 0.3s ease-out, -webkit-box-shadow 0.3s ease-out !important;
+  outline: 0 !important;
+  background-color: transparent !important;
+  padding: 8px 14px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  margin-bottom: 10px !important;
+  color: #21a6ff !important;
+  font-weight: 400 !important;
+  -webkit-appearance: none !important;
+  -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15) !important;
+  outline: 0 !important;
+  box-shadow: 0 !important;
+}
+
+.brd-content-col, .brd-content-col-text {
+  color: #496478 !important;
+}
+
+.brd-text-link {
+  text-decoration: none !important;
+}
+
+.brd-button {
+  margin-top: 5px !important;
+  margin-bottom: 10px !important;
+}
+
+.failedMsg {
+  color: #dd2441 !important;
+}

@@ -1,0 +1,133 @@
+/*
+leaflet-container height needs to either be defined in the main css
+or passed in as a prop to the Map component in LeafletReact
+ */
+.leaflet-container {
+  height: 100vh;
+  height: calc(var(--verticalHeight, 1vh) * 100);
+  width: 100%;
+  /* Note: without specifying z-index, viewer is hidden behind Leaflet map. */
+  z-index: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+#data-supplier-copyright {
+  position: absolute;
+  bottom: 16px;
+  right: 0;
+  padding: 0 5px;
+  background-color: rgba(255, 255, 255, 0.7);
+  color: rgb(68, 68, 68);
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 10px;
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+.leaflet-tile {
+  border: 0;
+}
+
+/* --- Styles for layer control attribute --- */
+#leaflet-map .leaflet-control-layers {
+  position: absolute;
+  left: 0px;
+  bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, .75);
+}
+
+/* Overrides global 'section' style being
+applied to the Layers Control in the UserPortal */
+.leaflet-control-layers-list {
+  background-color: transparent;
+  min-height: 20px;
+  max-height: 100px;
+  padding: 1px;
+  width: 110px;
+  line-height: 0.98em;
+  font-size: 0.98em;
+}
+
+.leaflet-control-layers-list label {
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+}
+
+.leaflet-control-layers-list label:last-child {
+  margin-bottom: 0;
+}
+
+/* Restyle radio button */
+input[type=radio].leaflet-control-layers-selector {
+  margin-top: 0px;
+  height: 12px;
+  opacity: 0;
+}
+
+/* Add something before each span in the list */
+.leaflet-control-layers-list span:before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 10px;
+  width: 10px;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+/* Radio checked styles */
+input[type=radio].leaflet-control-layers-selector:checked + span {
+  color: #EB526A;
+}
+input[type=radio].leaflet-control-layers-selector:checked + span:before {
+  background-color: #EB526A;
+}
+
+
+/* Zoom styles */
+.leaflet-bottom .leaflet-control-zoom {
+  border: none;
+  pointer-events: none;
+}
+.leaflet-bottom .leaflet-control-zoom .leaflet-control-zoom-in,
+.leaflet-touch .leaflet-bar a.leaflet-control-zoom-in:first-child,
+.leaflet-bottom .leaflet-control-zoom .leaflet-control-zoom-out,
+.leaflet-touch .leaflet-bar a.leaflet-control-zoom-out:last-child {
+  background-color: transparent;
+  color: transparent;
+  border: none;
+  pointer-events: auto;
+  border-radius: 50%;
+}
+.leaflet-bottom .leaflet-control-zoom .leaflet-control-zoom-in,
+.leaflet-touch .leaflet-bar a.leaflet-control-zoom-out:first-child {
+  background-image: url(../../assets/zoomIn.svg);
+}
+.leaflet-bottom .leaflet-control-zoom .leaflet-control-zoom-out,
+.leaflet-touch .leaflet-bar a.leaflet-control-zoom-out:last-child {
+  background-image: url(../../assets/zoomOut.svg);
+  margin-top: 10px;
+}
+
+.leaflet-bar {
+  box-shadow: none;
+}
+
+/* Overrides Leaflet-Google-Mutant to allow clicking on the
+Google links at the bottom of the map */
+.gm-style-cc {
+  pointer-events: auto;
+}
+
+@media (max-width: 767px) {
+  .leaflet-google-mutant {
+    z-index: auto;
+  }
+}

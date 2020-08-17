@@ -1,0 +1,42 @@
+/* .imageservice {} */
+
+.imageservice__overlay {
+    position: absolute;
+    top: 0;
+    padding: 0;
+    margin: 75px 20px 0;
+    z-index: 10;
+}
+.imageservice__overlay--bottom-right {
+    top: auto;
+    margin: auto 45px 30px auto;
+    right: 0;
+    bottom: 0;
+    /* If items are in the bottom right, this sets them to
+    stack beneath the timeline on mobile */
+    z-index: 1;
+}
+.imageservice__overlay--left {
+    left: 0;
+    width: 18%;
+    min-width: 17em;
+    max-width: 21em;
+    pointer-events: none;
+}
+.imageservice__overlay--right {
+    right: 0;
+}
+.imageservice__map-container-wrapper {
+    overflow: hidden;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    height: calc(var(--verticalHeight, 1vh) * 100);
+}
+
+@media (max-width: 767px) {
+    /* Allow extra space for the viewer buttons on mobile */
+    .imageservice__overlay--bottom-right {
+        margin: auto 10px 120px auto;
+    }
+}
