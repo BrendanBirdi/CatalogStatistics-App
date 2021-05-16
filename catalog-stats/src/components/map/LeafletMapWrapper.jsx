@@ -26,11 +26,11 @@ const GOOGLE_KEY = process.env.REACT_APP_IMAGESERVICE_GOOGLE_MAP_API_KEY;
 const GOOGLE_STYLES = [
   {
     featureType: 'poi',
-    stylers: [{ visibility: 'off' }],
+    stylers: [{ visibility: 'on' }],
   },
   {
     featureType: 'transit',
-    stylers: [{ visibility: 'off' }],
+    stylers: [{ visibility: 'on' }],
   },
 ];
 
@@ -88,6 +88,11 @@ class LeafletMapWrapper extends Component {
     const parsedInput = MapHelper.parseLatLng(viewportEvent.center[0], viewportEvent.center[1]);
     this.props.onBasemapChange(parsedInput.lat, parsedInput.lng, viewportEvent.zoom);
   }
+
+  onMouseMove = (event) => {
+    const { lat, lng } = event.latlng;
+    Logger.info('INFO:LMW: onMouseMove');
+  }  
 
   onDrag = () => {
     Logger.info('INFO:LMW: onDrag');
@@ -222,6 +227,7 @@ class LeafletMapWrapper extends Component {
           animate={true}
           onDrag={this.onDrag}
           onDragEnd={this.onDragEnd}
+          onMouseMove={this.onMouseMove}
           inertia={false}
         >
           <ZoomControl position="bottomright" />

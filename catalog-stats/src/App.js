@@ -7,7 +7,7 @@ class App extends Component {
       <div className="App">
         <CatalogStatistics
           // TODO: Add token here
-          apiToken=""
+          apiToken="tk02282499-e111-470b-bdc0-c95abdbc4033"
         />
       </div>
     );
