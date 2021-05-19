@@ -9,22 +9,38 @@ An example Standalone React App to visualise Bird.i's Catalog Data
 
 ### 1. Run the App
 
+For Linux:
 ```
 :$ cd catalog-stats/
 :$ npm install
 :$ npm start
 ```
 
+For Windows:
+```
+:$ cd catalog-stats/
+:$ npm install
+:$ npm start:win
+```
 
-### Caution - Environment variable setting
-Please note that the package.json scripts have been modified to work on a windows machine.
-For this to work on Linux the scripts need to change.
+### Remarks on approach taken
 
-e.g. for Windows, in package.json it is: 
-```
-    "build:dev": "set REACT_APP_ENV=dev&& npm run build",
-```
-Otherwise it is 
-```
-    "build:dev": "REACT_APP_ENV=dev npm run build",
-```
+This application has had a mousemove event added that fires notifications (debounced) in order to make it more responsive during the run. 
+
+The following use cases have been satisfied, by presenting information in text format in an overlay div.
+1. How many images in total are available over location X
+2. How many images, broken down by year, are available over location X
+3. What is the proportion of images acquired by each provider over location X
+4. Does location X have an image acquired every quarter for the last 1, 2 & 3 years
+5. What is the proportion of colour images Vs black & white images over location X
+6. What is the breakdown of images for the following cloud cover buckets over location X:
+    a. 0-9.99 %
+    b. 10-19.99 %
+    c. 20-29.99 %
+    d. > 30 %
+
+
+### Further opportunities for improvement
+
+1. CatalogStatistics.jsx can be improved by moving the image-viewer into a component of its own
+2. The information could be displayed in a more engaging format, in the form of graphs rather than text

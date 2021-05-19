@@ -25,8 +25,6 @@ class CatalogStatistics extends Component {
       console.warn('Bird.i: CatalogStatistics requires an apiToken.');
     }
 
- 
-
     this.state = {
       lat: props.lat,
       lng: props.lng,
@@ -133,36 +131,54 @@ class CatalogStatistics extends Component {
   }
 
 
+  // Calculates the number of images by year
   CalculateAggregationsByYear = (data) =>{
+    // this will store a json object 
+    // of the form {year: XXXX, itemCount: Y} 
+    // where XXXX the year number and where Y the number of images for that year
     let years = [];
     
     for(let i = 0; i < data.items.length; i++){
 
+      // get the necessary data
       let aqqDate = new Date(data.items[i].acquisitionDate);
       let aqYear = aqqDate.getFullYear();
 
+      // check if there is a json object in the arrray for the specified year
       let result = years.find(element => element.year === aqYear);
+
       if (!result) {
+        // if not found, this is a new year - create the json object and add it to the array
         years.push({year: aqYear, itemCount: 1});
       }
       else {
+        // if found increment the number of images found
         result.itemCount++;
       }
     }
-      this.setState({yearBreakDown: years});
+    this.setState({yearBreakDown: years});
 
   };
 
   CalculateAggregationsByProvider = (data) =>{
+    // this will store a json object 
+    // of the form {prov: XXXX, provCount: Y} 
+    // where XXXX the provider name and where Y the number of images for that provider
     let providers = [];
 
     for(let i = 0; i < data.items.length; i++){
+      
       let provider = data.items[i].provider;
+
+
+      // check if there is a json object in the arrray for the specified provider 
       let providerResult = providers.find(element => element.prov === provider);
       if(!providerResult){
+        // if not found, this is a new provider - create the json object and add it to the array
         providers.push({ prov: provider, provCount: 1});
       }
       else{
+        // if found increment the number of images found
         providerResult.provCount++;
       }
 
@@ -302,6 +318,7 @@ class CatalogStatistics extends Component {
 
   getYearBreakdown = () =>{
 
+    // creates the UI for the year breakdown
     let response = [];
     let dt =this.state.yearBreakDown;
 
@@ -314,6 +331,8 @@ class CatalogStatistics extends Component {
   }
 
   getProviderAquired = () =>{
+    // creates the UI for the provider breakown
+
     let response = [];
     let prov = this.state.providerAquired;
     for(let i=0; i < prov.length; i++){
@@ -325,6 +344,9 @@ class CatalogStatistics extends Component {
 
 
   getImageEveryQuaterPerYear = () =>{
+    // creates the UI for the breakdown of whether a given year 
+    // has at least one image in every quarter
+
     let response = [];
     let years = this.state.imageAquiredEveryQuater.years;
 
@@ -336,6 +358,7 @@ class CatalogStatistics extends Component {
   }
 
   getCloudCoverageStats = () => {
+    // builds the ui for the cloud coverage stats
     let coverageStats = this.state.cloudCoverageBuckets;
     let response = [];
     for(let i=0; i < coverageStats.length; i++)
