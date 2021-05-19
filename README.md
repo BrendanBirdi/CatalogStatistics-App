@@ -10,7 +10,21 @@ An example Standalone React App to visualise Bird.i's Catalog Data
 ### 1. Run the App
 
 ```
-:$ cd catalog-statistics/
+:$ cd catalog-stats/
 :$ npm install
 :$ npm start
+```
+
+
+### Caution - Environment variable setting
+Please note that the package.json scripts have been modified to work on a windows machine.
+For this to work on Linux the scripts need to change.
+
+e.g. for Windows, in package.json it is: 
+```
+    "build:dev": "set REACT_APP_ENV=dev&& npm run build",
+```
+Otherwise it is 
+```
+    "build:dev": "REACT_APP_ENV=dev npm run build",
 ```

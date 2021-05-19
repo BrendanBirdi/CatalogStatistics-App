@@ -12,10 +12,13 @@ class MapContainer extends Component {
   constructor(props) {
     super(props);
 
+    this.imageViewerRef = '#image-viewer'
+
     this.state = {
       mapProvider: MAP_PROVIDER,
     };
   }
+
 
   componentDidMount() {
 

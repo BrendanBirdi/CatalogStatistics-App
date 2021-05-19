@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { element } from 'prop-types';
 
 /* Bird.i Components */
 import MapContainer from './components/map/MapContainer';
@@ -24,10 +24,17 @@ class CatalogStatistics extends Component {
       console.warn('Bird.i: CatalogStatistics requires an apiToken.');
     }
 
+ 
+
     this.state = {
       lat: props.lat,
       lng: props.lng,
       zoom: props.zoom,
+      totalImageCount: 0,
+      colourImageCount: 0,
+      yearBreakDown: [],
+      providerAquired: [],
+      imageAquiredEveryQuater: { years: []} ,
       mapRef: undefined,
       mapCentre: {
         lat: props.lat,
@@ -52,6 +59,109 @@ class CatalogStatistics extends Component {
     });
   }
 
+
+  getImageAquiredPerQuater = (data, year) =>{
+
+    let monthToQuater = [0,0,0,1,1,1,2,2,2,3,3,3];
+    let counter = [0,0,0,0];
+    
+    for(let i = 0; i < data.items.length; i++){
+      let aqqDate = new Date(data.items[i].acquisitionDate);
+      let aqYear = aqqDate.getFullYear();
+      let aqMonth = aqqDate.getMonth();
+
+      if(aqYear === year){
+        let quater = monthToQuater[aqMonth -1];
+
+        counter[quater]++;
+      }
+
+    }
+
+    for(let i = 0; i < counter.length; i++){
+      if(counter[i] === 0){
+         return false;
+      }
+    }
+
+    return true;
+  }
+
+
+
+  processResponseData = (data) => {
+
+    this.CalculateAggregationsByYear(data);
+    this.CalculateAggregationsByProvider(data);
+
+    let currentYear = (new Date()).getFullYear();
+    this.getImageAquiredPerQuaterForEachYear(data,[currentYear -1, currentYear -2, currentYear -3]);
+  
+    this.setState({totalImageCount: data.items.length});
+  }
+
+  
+  getImageAquiredPerQuaterForEachYear = (data, years) => {
+
+   let result ={
+      years : [
+        
+      ]
+    }
+
+    for (let i=0; i < years.length; i++){
+
+      let outcome = this.getImageAquiredPerQuater(data, years[i]);
+      let yearOutcome = {
+        "year" : years[i],
+        "imageAquiredEveryQuater" : outcome
+      }
+      result.years.push(yearOutcome)
+
+    }
+    this.setState({ imageAquiredEveryQuater : result}); 
+  }
+
+
+  CalculateAggregationsByYear = (data) =>{
+    let years = [];
+    
+    for(let i = 0; i < data.items.length; i++){
+
+      let aqqDate = new Date(data.items[i].acquisitionDate);
+      let aqYear = aqqDate.getFullYear();
+
+      let result = years.find(element => element.year === aqYear);
+      if (!result) {
+        years.push({year: aqYear, itemCount: 1});
+      }
+      else {
+        result.itemCount++;
+      }
+    }
+      this.setState({yearBreakDown: years});
+
+  };
+
+  CalculateAggregationsByProvider = (data) =>{
+    let providers = [];
+
+    for(let i = 0; i < data.items.length; i++){
+      let provider = data.items[i].provider;
+      let providerResult = providers.find(element => element.prov === provider);
+      if(!providerResult){
+        providers.push({ prov: provider, provCount: 1});
+      }
+      else{
+        providerResult.provCount++;
+      }
+
+    }
+    this.setState({providerAquired: providers});
+
+  };
+  
+
   setLatLngZoom = (lat, lng, zoom) => {
     Logger.info('INFO:CS: setLatLngZoom');
 
@@ -59,6 +169,33 @@ class CatalogStatistics extends Component {
       lat,
       lng,
       zoom,
+    });
+    if (zoom >= MIN_ZOOM_LEVEL) {
+
+      // first fetch all images
+      CatalogService.getCatalogForPoint(lat, lng, zoom, this.props.apiToken, true, 10)
+      .then(data => this.processResponseData(data))
+      .then(
+        // fetch only the colour images
+        CatalogService.getCatalogForPoint(lat, lng, zoom, this.props.apiToken, false, 10)
+        .then(data => this.setState({colourImageCount: data.items.length}))
+      );
+    }
+  }
+
+  getColourProportion = () =>{
+
+    let result = this.state.colourImageCount / this.state.totalImageCount * 100;
+    return result.toFixed(1);
+
+  };
+
+  setLatLngAfterMouseMove = (lat, lng) => {
+    Logger.info('INFO:CS: setLatLngZoom');
+
+    this.setState({
+      lat,
+      lng
     });
   }
 
@@ -105,9 +242,62 @@ class CatalogStatistics extends Component {
 
   }
 
+  getYearBreakdown = () =>{
+
+    let response = [];
+    let dt =this.state.yearBreakDown;
+
+    for(let i=0; i < dt.length; i++ ){
+      response.push(<div>{dt[i].year}:{dt[i].itemCount} </div>);
+    }
+
+    return response;
+
+  }
+
+  getProvierAquired = () =>{
+    let response = [];
+    let prov = this.state.providerAquired;
+    for(let i=0; i < prov.length; i++){
+      response.push(<div>{prov[i].prov}:{prov[i].provCount}</div>);
+    }
+
+    return response;
+  }
+
+
+  getImageEveryQuaterPerYear = () =>{
+    let response = [];
+    let years = this.state.imageAquiredEveryQuater.years;
+
+    for(let i=0; i < years.length; i++){
+      response.push(<div>{years[i].year} has images every quarter:{years[i].imageAquiredEveryQuater.toString()}</div>);
+    }
+
+    return response;
+  }
+
+
   render() {
 
     return (
+      <div>
+      <div id="image-viewer">
+        <pre>
+          Lat: {this.state.lat} <br />
+          Lng: {this.state.lng} <br />
+          Zoom: {this.state.zoom } <br />
+          Images Available: {this.state.totalImageCount}  <br />
+          Colour Image Count: {this.state.colourImageCount} <br />
+          Colour Images %: {this.getColourProportion()} <br />
+          Black/White Images %  <br />
+          Breakdown by year:  {this.getYearBreakdown()} <br />
+          Images acquired provider: {this.getProvierAquired()} <br />
+          {this.getImageEveryQuaterPerYear()}
+
+
+        </pre>
+      </div>
       <div className="imageservice" >
         <div className="imageservice__map-container-wrapper" >
           <MapContainer
@@ -125,6 +315,7 @@ class CatalogStatistics extends Component {
             minZoomTriggered={this.state.minZoomTriggered}
           />
         </div>
+      </div>
       </div>
     );
   }
