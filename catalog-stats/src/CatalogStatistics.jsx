@@ -13,6 +13,7 @@ import CatalogService from './services/api/catalog';
 import './CatalogStatistics.css';
 
 const MIN_ZOOM_LEVEL = 14;
+const DEFAULT_CLOUD_COVERAGE = 10
 
 
 class CatalogStatistics extends Component {
@@ -35,6 +36,7 @@ class CatalogStatistics extends Component {
       yearBreakDown: [],
       providerAquired: [],
       imageAquiredEveryQuater: { years: []} ,
+      cloudCoverageBuckets: [],
       mapRef: undefined,
       mapCentre: {
         lat: props.lat,
@@ -52,6 +54,7 @@ class CatalogStatistics extends Component {
     });
   }
 
+
   setZoomProgress = (zoom) => {
     Logger.info('INFO:CS: setZoomProgress');
     this.setState({
@@ -62,9 +65,14 @@ class CatalogStatistics extends Component {
 
   getImageAquiredPerQuater = (data, year) =>{
 
+    // mapping for month to quarter
     let monthToQuater = [0,0,0,1,1,1,2,2,2,3,3,3];
+
+    // counter containing the count of images in a quarter
     let counter = [0,0,0,0];
     
+    // loop through all the images and if the image is of the 
+    // specified year, increment the count of the corresponding quarter
     for(let i = 0; i < data.items.length; i++){
       let aqqDate = new Date(data.items[i].acquisitionDate);
       let aqYear = aqqDate.getFullYear();
@@ -78,12 +86,14 @@ class CatalogStatistics extends Component {
 
     }
 
+    // if there is at least one quarter without an image belonging to it, return false
     for(let i = 0; i < counter.length; i++){
       if(counter[i] === 0){
          return false;
       }
     }
 
+    // Otherwise, return true.
     return true;
   }
 
@@ -162,6 +172,62 @@ class CatalogStatistics extends Component {
   };
   
 
+  CalculateCloudCoverageStatistics = ()  => {
+    // variables to keep track of the count of images for varying levels of cloud coverage
+    // in accordance to what the API can return
+    let countCloudCoverageBelow10 = 0;
+    let countCloudCoverageBelow20 = 0;
+    let countCloudCoverageBelow30 = 0;
+    let countCloudCoverageBelow50 = 0;
+
+    let cloudCoverBuckets = []
+
+    let lat = this.state.lat;
+    let lng = this.state.lng;
+    let zoom = this.state.zoom;
+
+    // chain the calls to the different levels of cloud visibility that we're interested in
+    // after each response, keep track of the number of images corresponding to that call
+    CatalogService.getCatalogForPoint(lat, lng, zoom, this.props.apiToken, false, 10)
+    .then(data1 => countCloudCoverageBelow10 = data1.items.length)
+    .then(() => 
+      CatalogService.getCatalogForPoint(lat, lng, zoom, this.props.apiToken, false, 20)
+      .then(data2 => countCloudCoverageBelow20 = data2.items.length)
+      .then(() => 
+        CatalogService.getCatalogForPoint(lat, lng, zoom, this.props.apiToken, false, 30)
+        .then(data3 => countCloudCoverageBelow30 = data3.items.length)
+        .then(() => 
+          CatalogService.getCatalogForPoint(lat, lng, zoom, this.props.apiToken, false, 50)
+          .then(data4 => countCloudCoverageBelow50 = data4.items.length)
+          .then(
+            () => {
+              // push all the calculations to the state object so they can be reflected in the ui
+              cloudCoverBuckets.push(countCloudCoverageBelow10);
+              cloudCoverBuckets.push(countCloudCoverageBelow20 - countCloudCoverageBelow10);
+              cloudCoverBuckets.push(countCloudCoverageBelow30 - countCloudCoverageBelow20);
+              cloudCoverBuckets.push(countCloudCoverageBelow50 - countCloudCoverageBelow30);
+              this.setState({cloudCoverageBuckets: cloudCoverBuckets});
+            }
+          )
+        )
+      )
+    )
+  }
+
+  RunExerciseUseCases = (lat, lng, zoom) => {
+      // first fetch all images with the default cloud visibility
+      CatalogService.getCatalogForPoint(lat, lng, zoom, this.props.apiToken, true, DEFAULT_CLOUD_COVERAGE)
+      .then(data => this.processResponseData(data))
+      .then(
+        // fetch only the colour images for the same visibility
+        CatalogService.getCatalogForPoint(lat, lng, zoom, this.props.apiToken, false, DEFAULT_CLOUD_COVERAGE)
+        .then(data => this.setState({colourImageCount: data.items.length}))
+        .then(
+            this.CalculateCloudCoverageStatistics()
+        )
+      );    
+  }
+
   setLatLngZoom = (lat, lng, zoom) => {
     Logger.info('INFO:CS: setLatLngZoom');
 
@@ -171,15 +237,7 @@ class CatalogStatistics extends Component {
       zoom,
     });
     if (zoom >= MIN_ZOOM_LEVEL) {
-
-      // first fetch all images
-      CatalogService.getCatalogForPoint(lat, lng, zoom, this.props.apiToken, true, 10)
-      .then(data => this.processResponseData(data))
-      .then(
-        // fetch only the colour images
-        CatalogService.getCatalogForPoint(lat, lng, zoom, this.props.apiToken, false, 10)
-        .then(data => this.setState({colourImageCount: data.items.length}))
-      );
+      this.RunExerciseUseCases(lat, lng, zoom)
     }
   }
 
@@ -255,7 +313,7 @@ class CatalogStatistics extends Component {
 
   }
 
-  getProvierAquired = () =>{
+  getProviderAquired = () =>{
     let response = [];
     let prov = this.state.providerAquired;
     for(let i=0; i < prov.length; i++){
@@ -277,6 +335,15 @@ class CatalogStatistics extends Component {
     return response;
   }
 
+  getCloudCoverageStats = () => {
+    let coverageStats = this.state.cloudCoverageBuckets;
+    let response = [];
+    for(let i=0; i < coverageStats.length; i++)
+    {
+      response.push(<div>Bucket {i+1}:{coverageStats[i]} </div>);
+    }    
+    return response;
+  }
 
   render() {
 
@@ -292,10 +359,10 @@ class CatalogStatistics extends Component {
           Colour Images %: {this.getColourProportion()} <br />
           Black/White Images %  <br />
           Breakdown by year:  {this.getYearBreakdown()} <br />
-          Images acquired provider: {this.getProvierAquired()} <br />
+          Images acquired provider: {this.getProviderAquired()} <br />
           {this.getImageEveryQuaterPerYear()}
-
-
+          Cloud Coverage Breakdown: 
+          {this.getCloudCoverageStats()}
         </pre>
       </div>
       <div className="imageservice" >
