@@ -52,13 +52,16 @@
   },
   "scripts": {
     "start": "PORT=3002 react-scripts start",
+    "start:win": "set PORT=3002&& react-scripts start",
     "build": "sh -ac '. .env.${REACT_APP_ENV}; react-scripts build'",
     "build:dev": "REACT_APP_ENV=dev npm run build",
+    "build:dev:win": "set REACT_APP_ENV=dev&& npm run build",
     "build:production": "REACT_APP_ENV=production npm run build",
+    "build:production:win": "set REACT_APP_ENV=production&& npm run build",
     "test": "jest -u",
     "eject": "react-scripts eject",
     "export": "webpack --config webpack.config.js",
-    "prepublishOnly": "npm install && webpack --config webpack.config.js"
+    "prepublishOnly": "npm install && webpack --config webpack.config.js",
   },
   "devDependencies": {
     "@babel/preset-env": "^7.7.4",

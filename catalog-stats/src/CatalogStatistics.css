@@ -34,6 +34,17 @@
     height: calc(var(--verticalHeight, 1vh) * 100);
 }
 
+#image-viewer {
+    position :absolute;
+    margin: 40px;
+    width: 200px;
+    height: 100px;
+    opacity: 0.8;
+    z-index: 10000;
+}
+
+pre { white-space: pre-wrap; }
+
 @media (max-width: 767px) {
     /* Allow extra space for the viewer buttons on mobile */
     .imageservice__overlay--bottom-right {

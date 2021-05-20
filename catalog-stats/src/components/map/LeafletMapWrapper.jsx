@@ -21,16 +21,17 @@ const DEFAULT_ZOOM = 5;
 const DEFAULT_CLICK_ZOOM_LEVEL = 14;
 const MAP_BOUNDS = [[-85.0, -180.0], [85.0, 180.0]];
 const ZOOM_END_TIMEOUT = 1000; // 1 second
+const DEBOUNCE_LAG = 200; // 200ms
 
 const GOOGLE_KEY = process.env.REACT_APP_IMAGESERVICE_GOOGLE_MAP_API_KEY;
 const GOOGLE_STYLES = [
   {
     featureType: 'poi',
-    stylers: [{ visibility: 'off' }],
+    stylers: [{ visibility: 'on' }],
   },
   {
     featureType: 'transit',
-    stylers: [{ visibility: 'off' }],
+    stylers: [{ visibility: 'on' }],
   },
 ];
 
@@ -43,7 +44,37 @@ class LeafletMapWrapper extends Component {
     this.state = {
       viewport: initialViewport,
     };
+
+    const ctrl = this;
+    this.debouncedSetLatLngZoom = this.debounce(
+      (lat, lng, zoom) => {
+        ctrl.onReceiveLatLngZoom(lat, lng, zoom); 
+      Logger.info(`INFO:LMW: onMouseMove debounced ${lat} , ${lng}`);
+    }, 200);
   }
+
+  // debounce logic copied from 
+  // https://www.educative.io/edpresso/how-to-use-the-debounce-function-in-javascript
+  debounce(func, wait, immediate) {
+    var timeout;
+    return function executedFunction() {
+      var context = this;
+      var args = arguments;
+        
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+  
+      var callNow = immediate && !timeout;
+    
+      clearTimeout(timeout);
+  
+      timeout = setTimeout(later, wait);
+    
+      if (callNow) func.apply(context, args);
+    };
+  };
 
   componentDidUpdate(previousProps) {
     Logger.info('INFO:LMW: componentDidUpdate');
@@ -88,6 +119,12 @@ class LeafletMapWrapper extends Component {
     const parsedInput = MapHelper.parseLatLng(viewportEvent.center[0], viewportEvent.center[1]);
     this.props.onBasemapChange(parsedInput.lat, parsedInput.lng, viewportEvent.zoom);
   }
+
+  onMouseMove = (event) => {
+    const { lat, lng } = event.latlng;
+    const zoom = this.state.leaflet.getZoom();
+    this.debouncedSetLatLngZoom(lat, lng, zoom);
+  }  
 
   onDrag = () => {
     Logger.info('INFO:LMW: onDrag');
@@ -222,6 +259,7 @@ class LeafletMapWrapper extends Component {
           animate={true}
           onDrag={this.onDrag}
           onDragEnd={this.onDragEnd}
+          onMouseMove={this.onMouseMove}
           inertia={false}
         >
           <ZoomControl position="bottomright" />
